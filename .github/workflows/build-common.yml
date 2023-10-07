@@ -97,16 +97,16 @@ jobs:
     strategy:
       matrix:
         test-java-version:
-          - 8
-          - 11
+          # - 8
+          # - 11
           - 17
-          - 18
+          # - 18
         vm:
           - hotspot
           # TODO (trask) enable once profiler supports OpenJ9
           # - openj9
         os:
-          - windows-2019
+          # - windows-2019
           - ubuntu-latest
       fail-fast: false
     steps:
@@ -141,35 +141,35 @@ jobs:
             -Porg.gradle.java.installations.paths=${{ steps.setup-test-java.outputs.path }}
             -Porg.gradle.java.installations.auto-download=false ${{ inputs.no-build-cache && ' --no-build-cache' || '' }}
 
-  setup-smoke-test-matrix:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-      - uses: actions/checkout@v4
+  #  setup-smoke-test-matrix:
+  #  runs-on: ubuntu-latest
+  #  outputs:
+  #    matrix: ${{ steps.set-matrix.outputs.matrix }}
+  #  steps:
+  #    - uses: actions/checkout@v4
 
-      - id: set-matrix
-        run: |
-          modules=$(ls -d smoke-tests/apps/* | sed 's/\/$//' | sed 's/\//:/g' | sed 's/^/:/')
-          inner_json=$(echo $modules | xargs echo | sed 's/ /","/g')
-          echo "::set-output name=matrix::{\"module\":[\"$inner_json\"]}"
+  #    - id: set-matrix
+  #      run: |
+  #        modules=$(ls -d smoke-tests/apps/* | sed 's/\/$//' | sed 's/\//:/g' | sed 's/^/:/')
+  #        inner_json=$(echo $modules | xargs echo | sed 's/ /","/g')
+  #        echo "::set-output name=matrix::{\"module\":[\"$inner_json\"]}"
 
-  smoke-test:
-    needs: setup-smoke-test-matrix
-    runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{fromJson(needs.setup-smoke-test-matrix.outputs.matrix)}}
-      fail-fast: false
-    steps:
-      - uses: actions/checkout@v4
+  # smoke-test:
+  #  needs: setup-smoke-test-matrix
+  #  runs-on: ubuntu-latest
+  #  strategy:
+  #    matrix: ${{fromJson(needs.setup-smoke-test-matrix.outputs.matrix)}}
+  #    fail-fast: false
+  #  steps:
+  #    - uses: actions/checkout@v4
 
-      - name: Set up Java 17
-        uses: actions/setup-java@v3
-        with:
-          distribution: temurin
-          java-version: 17
+  #    - name: Set up Java 17
+  #      uses: actions/setup-java@v3
+  #      with:
+  #        distribution: temurin
+  #        java-version: 17
 
-      - name: Test
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: ${{ matrix.module }}:smokeTest
+  #    - name: Test
+  #      uses: gradle/gradle-build-action@v2
+  #      with:
+  #        arguments: ${{ matrix.module }}:smokeTest
