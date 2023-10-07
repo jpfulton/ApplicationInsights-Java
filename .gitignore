@@ -5,3 +5,6 @@ build/
 
 # Intellij
 /.idea/
+
+# JPF Custom Ignore Rules
+**/bin/*
