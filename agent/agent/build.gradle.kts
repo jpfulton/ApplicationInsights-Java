@@ -1,6 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.github.jk1.license.filter.LicenseBundleNormalizer
 import com.github.jk1.license.render.InventoryMarkdownReportRenderer
+import com.github.jk1.license.render.JsonReportRenderer
 
 plugins {
   id("com.github.jk1.dependency-license-report")
@@ -188,7 +189,10 @@ with(components["java"] as AdhocComponentWithVariants) {
 licenseReport {
   outputDir = rootProject.file("licenses").absolutePath
 
-  renderers = arrayOf(InventoryMarkdownReportRenderer("more-licenses.md"))
+  renderers = arrayOf(
+    InventoryMarkdownReportRenderer("more-licenses.md"),
+    JsonReportRenderer("licenses.json")
+  )
 
   configurations = arrayOf(licenseReportDependencies.name)
 
